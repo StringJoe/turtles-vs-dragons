@@ -10,6 +10,10 @@ const backgroundContext = spriteCanvas.getContext("2d");
 const BACKGROUND_CANVAS_WIDTH = backgroundCanvas.width = 800;
 const BACKGROUND_CANVAS_HEIGHT = backgroundCanvas.height = 600;
 
+// create array of background images
+const BACKGROUND_IMAGES = ["swamp/boardwalk1.png", "swamp/Boat 1.png", "swamp/Cabin 2.png", 
+                            "swamp/Castle.png", "swamp/Caves 1.png"];
+
 // create the background image then draw it to the screen
 const backgroundImage = new Image();
 backgroundImage.src = 'swamp/boardwalk1.png';
@@ -25,7 +29,7 @@ https://www.youtube.com/watch?v=CY0HE277IBM&list=LL&index=6&
 function animate() {
     spriteContext.clearRect(0, 0, SPRITE_CANVAS_WIDTH, SPRITE_CANVAS_HEIGHT);
     backgroundContext.clearRect(0, 0, SPRITE_CANVAS_WIDTH, SPRITE_CANVAS_HEIGHT);
-    backgroundContext.fillRect(50, 50, 100, 100);
+    
     //ctx.fillRect(x, 50, 100, 100);
 
     // the first four values (sx etc) determine where on image we zoom in
@@ -47,30 +51,18 @@ function animate() {
 
 animate();
 
+// code for changing backgrounds belongs to Paolo Bergantino 
+// and Mateen Ulhaq from stackoverflow
+// https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript
+var e = document.getElementById("level-select");
 
-/* 
-Most code for this function belongs to w3schools
-minor changes were made to fit the game
-
-When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function newLevel() {
-    document.getElementById("myDropdown").classList.toggle("show");
-    
+function onChange() {
+    //var value = e.value;
+    //var text = e.options[e.selectedIndex].text;
+    backgroundImage.src = BACKGROUND_IMAGES[e.value-1];
+    //console.log(value, text);
   }
-  
-  // Close the dropdown menu if the user clicks outside of it
-  window.onclick = function(event) {
-    if (!event.target.matches('.levelBtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
-  }
+e.onchange = onChange;
+//onChange();
 
-  /* end w3schools code */
+// end background changing code
