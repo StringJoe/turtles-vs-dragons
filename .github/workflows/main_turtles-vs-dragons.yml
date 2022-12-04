@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'Turtles-VS-Dragons'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_31EB14465D574D3EAB5166D55D77A231 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_69F6D702C0CC4C139F88E7C3BB7E2D0E }}
           package: .
