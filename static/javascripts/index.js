@@ -82,6 +82,25 @@ class Player {
 // create the player object
 const player = new Player()
 
+// create dictionary to determine if key has been pressed
+const keys = {
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    },
+    w: {
+        pressed: false
+    },
+    s: {
+        pressed: false
+    },
+    space: {
+        pressed: false
+    }
+}
+
 // create the animation loop
 function animate() {
     // clear the canvas each loop so image doesn't bleed as it moves
@@ -95,6 +114,24 @@ function animate() {
 
     // call the update function for the player
     player.update()
+
+    // check if a key has been pressed and move the player
+    if(keys.a.pressed && player.position.x > 0) {
+        player.velocity.x = -5
+    }
+    else if (keys.d.pressed && player.position.x+player.width+10 < canvas.width) {
+        player.velocity.x = +5
+    }
+    else if(keys.w.pressed && player.position.y > canvas.height / 2) {
+        player.velocity.y = -5
+    }
+    else if(keys.s.pressed && player.position.y < canvas.height / 1.2) {
+        player.velocity.y = +5
+    }
+    else {
+        player.velocity.x = 0
+        player.velocity.y = 0
+    }
 }
 
 // start the game animation
@@ -105,22 +142,27 @@ addEventListener('keydown', ({key}) => {
     switch (key) {
         case 'a':
             console.log("left")
-            player.velocity.x = -5
+            //player.velocity.x = -5
+            keys.a.pressed = true;
             break
         case 'd':
             console.log("right")
-            player.velocity.x = +5
+            //player.velocity.x = +5
+            keys.d.pressed = true;
             break
         case 'w':
             console.log("up")
-            player.velocity.y = -5
+            //player.velocity.y = -5
+            keys.w.pressed = true;
             break
         case 's':
             console.log("down")
-            player.velocity.y = +5
+            //player.velocity.y = +5
+            keys.s.pressed = true;
             break
         case ' ':
             console.log("shoot")
+            keys.space.pressed = true;
             break
 
     }
@@ -131,22 +173,27 @@ addEventListener('keyup', ({key}) => {
     switch (key) {
         case 'a':
             console.log("left")
-            player.velocity.x = 0
+            //player.velocity.x = 0
+            keys.a.pressed = false;
             break
         case 'd':
             console.log("right")
-            player.velocity.x = 0
+            //player.velocity.x = 0
+            keys.d.pressed = false;
             break
         case 'w':
             console.log("up")
-            player.velocity.y = 0
+            //player.velocity.y = 0
+            keys.w.pressed = false;
             break
         case 's':
             console.log("down")
-            player.velocity.y = 0
+            //player.velocity.y = 0
+            keys.s.pressed = false;
             break
         case ' ':
             console.log("shoot")
+            keys.space.pressed = false;
             break
 
     }
