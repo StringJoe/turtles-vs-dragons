@@ -1,5 +1,35 @@
+// create a canvas for the background of the game
+const backgroundCanvas = document.getElementById("backgroundCanvas");
+const backgroundContext = spriteCanvas.getContext("2d");
+const BACKGROUND_CANVAS_WIDTH = backgroundCanvas.width = innerWidth;
+const BACKGROUND_CANVAS_HEIGHT = backgroundCanvas.height = innerHeight;
+
+// create array of background images
+const BACKGROUND_IMAGES = ["swamp/boardwalk1.png", "swamp/Boat 1.png", "swamp/Cabin 2.png", 
+                            "swamp/Castle.png", "swamp/Caves 1.png"];
+
+// create the background image then draw it to the screen
+const backgroundImage = new Image();
+backgroundImage.src = 'swamp/boardwalk1.png';
+
+// code for changing backgrounds belongs to Paolo Bergantino 
+// and Mateen Ulhaq from stackoverflow
+// https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript
+var e = document.getElementById("level-select");
+
+function onChange() {
+    //var value = e.value;
+    //var text = e.options[e.selectedIndex].text;
+    backgroundImage.src = BACKGROUND_IMAGES[e.value-1];
+    //console.log(value, text);
+  }
+e.onchange = onChange;
+//onChange();
+
+// end background changing code
+
 // get the canvas element from the web page and the context of the canvas
-const canvas = document.querySelector('canvas')
+const canvas = document.getElementById('spriteCanvas')
 const c = canvas.getContext('2d')
 
 // define the width and height to be the same as the monitors width and height
@@ -59,6 +89,9 @@ function animate() {
     
     // start animating the canvas
     requestAnimationFrame(animate)
+
+    // create the background image
+    backgroundContext.drawImage(backgroundImage, 0, 0, BACKGROUND_CANVAS_WIDTH, BACKGROUND_CANVAS_HEIGHT);
 
     // call the update function for the player
     player.update()
