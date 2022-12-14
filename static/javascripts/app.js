@@ -17,8 +17,24 @@ const BACKGROUND_IMAGES = ["swamp/boardwalk1.png", "swamp/Boat 1.png", "swamp/Ca
 // create the background image then draw it to the screen
 const backgroundImage = new Image();
 backgroundImage.src = 'swamp/boardwalk1.png';
-const dragonImage = new Image();
-dragonImage.src = 'dragon-images/blue-dragons.png';
+
+var dragonImage = new Image();
+// function to add blue dragon to array
+function blueDragonCreator() {
+    dragonImage.src = 'dragon-images/blue-dragons.png';
+}
+
+var dragonArray = []
+
+// initial variable to show current wave
+var wave = 1;
+
+// create function to show what wave user is currently at
+function currentWave() {
+    spriteContext.font = "48px serif";
+    spriteContext.fillStyle = "#FFFFFF"
+    spriteContext.fillText("Wave " + wave, 300, 50);
+}
 
 
 
@@ -37,7 +53,12 @@ function animate() {
     //ctx.drawImage(playerImage, sx, sy, sw, sh, x1, 0, 300, 300);
     //ctx.drawImage(dragonImage, sx, 0, 120, 120, x2, 300, 300, 300);
     backgroundContext.drawImage(backgroundImage, 0, 0, BACKGROUND_CANVAS_WIDTH, BACKGROUND_CANVAS_HEIGHT);
-    spriteContext.drawImage(dragonImage, 0, 0, 150, 150, -40, -15, 150, 150);
+
+    // draw the current wave to the screen
+    currentWave();
+
+    
+    spriteContext.drawImage(dragonImage, 0, 0, 150, 150, -40, 460, 150, 150);
     //x--;
     //x1++;
     //x2++;
