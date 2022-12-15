@@ -206,6 +206,7 @@ var playerScore = 0
 var playerLives = 20
 var bonusScore = 1
 
+// get the html elements so they can be updated
 var score = document.getElementById("playerScore")
 var lifeCount = document.getElementById("lifeCount")
 
@@ -239,14 +240,21 @@ function animate() {
         grid.dragons.forEach((dragon, i) => {
             dragon.update({velocity: {x: dragonSpeed, y: 0}})
 
+            // loop through each projectile and dragon to get their position
+            // and then calculate whether the bullet hit or not
             projectiles.forEach((projectile, j) => {
-                if (projectile.position.y - projectile.radius -150 <= dragon.position.y + dragon.height && 
+                if (projectile.position.y - projectile.radius <= dragon.position.y + dragon.height && 
                     projectile.position.x + projectile.radius  >= dragon.position.x &&
-                    projectile.position.x - projectile.radius - 100 <= dragon.position.x) {
+                    projectile.position.x - projectile.radius - 100 <= dragon.position.x &&
+                    projectile.position.y + projectile.radius -100 >= dragon.position.y - dragon.height) {
                     setTimeout(() => {
                         grid.dragons.splice(i, 1)
                         projectiles.splice(j, 1)
+                        
+                        // increase the count of dragons killed by 1
                         dragonsKilled++
+
+                        // update the players score
                         playerScore += 100*bonusScore
                         score.innerHTML = playerScore
                     }, 0)
