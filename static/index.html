@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turtles VS Dragons</title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/modal.css">
 </head>
-<body>
+<body onload="loadUserInstructions()">
 
     <select name="New Level" id="level-select">
         <option value="1">The Boardwalk</option>
@@ -16,6 +17,68 @@
         <option value="5">The Caves</option>
     </select>
     
+     <!-- Trigger/Open The Modal 
+    this code was gotten from 
+    https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+    -->
+    <button id="myBtn">Click For Instructions</button>
+
+    <!-- The Modal 
+this code was gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+-->
+<div id="myModal" class="modal">
+
+    <!-- 
+      
+      Modal content 
+    
+    everything except for the h2 and p tags were gotten from
+    https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+    -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>About:</h2>
+      <p>Welcome to Turtles VS Dragons! This game is a side scrolling version of
+        Space Invaders! It's up to you to stop those evil dragons from destroying
+        the entire swamp on the turtles. Use your magic bullets to destroy as many
+        of them as you can!
+      </p>
+      <h2>Instructions:</h2>
+      <p>Above the game window you will see different buttons and game information.
+        The dropdown menu will let you select what kind of background you would like
+        to see when shooting the dragons. Nothing special happens besides just changing
+        how things look. You can also choose to open up the instructions again if you 
+        forgot how to do something. 
+      </p>
+      <hr>
+      <p>
+        For this game, you will start with 20 lives. Every time you kill a certain amount
+        of dragons your life counter will increase. However, this will only increase up to
+        a certain point. 
+      </p>
+      <hr>
+      <p>Your score is also determined by how many dragons you kill. As you kill more dragons,
+        you will eventually hit checkpoints that will increase how many points you will earn.
+        However, you this will only increase up to a certain point.
+      </p>
+      <hr>
+      <p>In addition to see the amount of points and lives you have, you will also be able
+        to see how many dragons you have killed. If you play enough you will be able to tell
+        just how many dragons you need to kill before you hit each checkpoint. However, as 
+        you gain bonuses for the amount of dragons you kill, they dragons speed and the 
+        frequency they spawn at will also increase.
+      </p>
+      <hr>
+      <h2>Controls:</h2>
+      <p>The controls are pretty simple for this game. W is up, S is down, A is left, and D is right.
+        You can only go a certain distance to your left, but as you move around don't be surpised if 
+        something unexpected happens. Oh and before I forget, just hit the spacebar if you want to 
+        shoot the dragons. Good Luck!  
+      </p>
+    </div>
+  
+  </div>
+
     <div class="player-score">
         <p>Score: <span id="playerScore"></span> Lives: <span id="lifeCount"></span> Dragons Killed: <span id="dragonsKilled"></span></p>
 
@@ -26,5 +89,6 @@
     
     
     <script src="javascripts/index.js"></script>
+    <script src="javascripts/instructions.js"></script>
 </body>
 </html>
