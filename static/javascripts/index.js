@@ -35,8 +35,8 @@ class Player {
     constructor() {
         // define the starting position for the player
         this.position = {
-            x: canvas.width / 2.2,
-            y: canvas.height / 1.2
+            x: canvas.width / 1.1,
+            y: canvas.height / 2
         }
 
         // define an initial velocity for player movement
@@ -57,7 +57,7 @@ class Player {
 
     // create a method to draw the character to the screen
     draw() {
-        c.fillStyle = 'red'
+        //c.fillStyle = 'blue'
         //c.fillRect(this.position.x, this.position.y, this.width,
         //    this.height)
 
@@ -112,7 +112,7 @@ class Dragon {
     update({velocity}) {
         this.draw()
         //this.position.x += this.velocity.x
-        this.position.y += velocity.y
+        this.position.x += velocity.x
     }
 }
 
@@ -132,13 +132,13 @@ class Grid {
         this.dragons = []
 
         // create multiple dragon objects
-        for (let i = 0; i < 12; i++) {
-            this.dragons.push(new Dragon({position: {x:i*150, y: 0}}))
+        for (let i = 0; i < 4; i++) {
+            this.dragons.push(new Dragon({position: {x:0, y: i*150}}))
         }
     }
 
     update() {
-        this.position.y += this.velocity.y
+        this.position.x += this.velocity.x
     }
 }
 
@@ -154,7 +154,7 @@ class Projectile {
     // draw the projectile as a circle
     draw() {
         c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.arc(this.position.x-75, this.position.y+25, this.radius, 0, Math.PI * 2)
         c.fillStyle = 'red'
         c.fill()
         c.closePath()
@@ -192,7 +192,7 @@ const keys = {
     s: {
         pressed: false
     },
-    m: {
+    space: {
         pressed: false
     }
 }
@@ -237,10 +237,10 @@ function animate() {
     grids.forEach(grid => {
         //grid.update()
         grid.dragons.forEach((dragon, i) => {
-            dragon.update({velocity: {x: 0, y: dragonSpeed}})
+            dragon.update({velocity: {x: dragonSpeed, y: 0}})
 
             projectiles.forEach((projectile, j) => {
-                if (projectile.position.y - projectile.radius <= dragon.position.y + dragon.height && 
+                if (projectile.position.y - projectile.radius -150 <= dragon.position.y + dragon.height && 
                     projectile.position.x + projectile.radius  >= dragon.position.x &&
                     projectile.position.x - projectile.radius - 100 <= dragon.position.x) {
                     setTimeout(() => {
@@ -282,7 +282,7 @@ function animate() {
         playerLives = 35
     }
     else if (dragonsKilled > 100) {
-        dragonSpeed = 0.6
+        dragonSpeed = 0.5
         dragonsOnScreen = 500
         bonusScore = 6
         playerLives = 30
@@ -294,35 +294,35 @@ function animate() {
         playerLives = 30
     }
     else if (dragonsKilled > 50) {
-        dragonSpeed = 0.4
+        dragonSpeed = 0.5
         dragonsOnScreen = 700
         bonusScore = 4
         playerLives = 30
     }
     else if (dragonsKilled > 25) {
-        dragonSpeed = 0.3
+        dragonSpeed = 0.5
         dragonsOnScreen = 800
         bonusScore = 3
         playerLives = 25
     }
     else if (dragonsKilled > 10) {
-        dragonSpeed = 0.2
+        dragonSpeed = 0.4
         dragonsOnScreen = 900
         bonusScore = 2
         playerLives = 20
     }
     
     // check if a key has been pressed and move the player
-    if(keys.a.pressed && player.position.x > 0) {
+    if(keys.a.pressed && player.position.x > canvas.width-500) {
         player.velocity.x = -5
     }
     else if (keys.d.pressed && player.position.x+player.width+10 < canvas.width) {
         player.velocity.x = +5
     }
-    else if(keys.w.pressed && player.position.y > canvas.height / 2) {
+    else if(keys.w.pressed && player.position.y > 0) {
         player.velocity.y = -5
     }
-    else if(keys.s.pressed && player.position.y < canvas.height / 1.2) {
+    else if(keys.s.pressed && player.position.y + player.height < canvas.height) {
         player.velocity.y = +5
     }
     else {
@@ -331,7 +331,7 @@ function animate() {
     }
 
     // if code is put in here it calls projectile too many times
-    if(keys.m.pressed) {
+    if(keys.space.pressed) {
         
     }
 
@@ -368,11 +368,12 @@ addEventListener('keydown', ({key}) => {
             //player.velocity.y = +5
             keys.s.pressed = true;
             break
-        case 'm':
+        case ' ':
             //console.log("shoot")
-            keys.m.pressed = true;
+            keys.space.pressed = true;
 
             // add a projectile to the array
+            // this is where the movement of the bullet is decided
             projectiles.push(
                 new Projectile({
                     position: {
@@ -380,8 +381,8 @@ addEventListener('keydown', ({key}) => {
                         y: player.position.y
                     },
                     velocity: {
-                        x: 0,
-                        y: -10
+                        x: -10,
+                        y: 0
                     }
                 })
             )
@@ -413,9 +414,9 @@ addEventListener('keyup', ({key}) => {
             //player.velocity.y = 0
             keys.s.pressed = false;
             break
-        case 'm':
+        case ' ':
             console.log("shoot")
-            keys.m.pressed = false;
+            keys.space.pressed = false;
             break
 
     }
