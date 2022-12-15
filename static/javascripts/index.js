@@ -132,8 +132,8 @@ class Grid {
         this.dragons = []
 
         // create multiple dragon objects
-        for (let i = 0; i < 4; i++) {
-            this.dragons.push(new Dragon({position: {x:0, y: i*150}}))
+        for (let i = 0; i < 6; i++) {
+            this.dragons.push(new Dragon({position: {x:0, y: i*100}}))
         }
     }
 
@@ -176,7 +176,7 @@ const player = new Player()
 const projectiles = []
 
 // create an array to hold grid objects
-const grids = [new Grid()]
+const grids = []
 
 // create dictionary to determine if key has been pressed
 const keys = {
@@ -200,15 +200,19 @@ const keys = {
 // frames for dragon and player info
 let frames = 0
 var dragonsKilled = 0
-var dragonSpeed = 0.1
+var dragonSpeed = 0.2
 var dragonsOnScreen = 1000
 var playerScore = 0
 var playerLives = 20
 var bonusScore = 1
 
+// create boolean value to check if game is over
+gameOver = false
+
 // get the html elements so they can be updated
 var score = document.getElementById("playerScore")
 var lifeCount = document.getElementById("lifeCount")
+var dragonDeaths = document.getElementById("dragonsKilled")
 
 // create the animation loop
 function animate() {
@@ -240,6 +244,12 @@ function animate() {
         grid.dragons.forEach((dragon, i) => {
             dragon.update({velocity: {x: dragonSpeed, y: 0}})
 
+            // decrease the player life count by each dragon that makes it past
+            if(dragon.position.x >= canvas.width) {
+                grid.dragons.splice(i, 1)
+                playerLives--
+            }
+
             // loop through each projectile and dragon to get their position
             // and then calculate whether the bullet hit or not
             projectiles.forEach((projectile, j) => {
@@ -253,7 +263,7 @@ function animate() {
                         
                         // increase the count of dragons killed by 1
                         dragonsKilled++
-
+                        dragonDeaths.innerHTML = dragonsKilled
                         // update the players score
                         playerScore += 100*bonusScore
                         score.innerHTML = playerScore
@@ -266,58 +276,86 @@ function animate() {
     lifeCount.innerHTML = playerLives
     // change the amount of dragons based on how many killed
     // and also change the players score and life count
-    if(dragonsKilled > 500) {
+    if(dragonsKilled >= 500) {
         dragonSpeed = 0.5
         dragonsOnScreen = 50
-        bonusScore = 50
+        
+        if (dragonsKilled === 500) {
+            playerLives = 100
+        }
     }
-    else if(dragonsKilled > 250) {
+    else if(dragonsKilled >= 250) {
         dragonSpeed = 2.5
         dragonsOnScreen = 1000
         bonusScore = 25
-        playerLives = 100
+        
+        if (dragonsKilled === 250) {
+            playerLives = 80
+        }
     }
-    else if(dragonsKilled > 150) {
+    else if(dragonsKilled >= 150) {
         dragonSpeed = 1.0
         dragonsOnScreen = 300
         bonusScore = 10
-        playerLives = 50
+        
+        if (dragonsKilled === 150) {
+            playerLives = 40
+        }
     }
-    else if (dragonsKilled > 125) {
+    else if (dragonsKilled >= 125) {
         dragonSpeed = 0.75
         dragonsOnScreen = 400
         bonusScore = 8
-        playerLives = 35
+        
+        if (dragonsKilled === 125) {
+            playerLives = 35
+        }
     }
-    else if (dragonsKilled > 100) {
+    else if (dragonsKilled >= 100) {
         dragonSpeed = 0.5
         dragonsOnScreen = 500
         bonusScore = 6
-        playerLives = 30
+        
+        if (dragonsKilled === 100) {
+            playerLives = 30
+        }
     }
-    else if (dragonsKilled > 75) {
+    else if (dragonsKilled >= 75) {
         dragonSpeed = 0.5
         dragonsOnScreen = 600
         bonusScore = 5
-        playerLives = 30
+        
+        if (dragonsKilled === 75) {
+            playerLives = 25
+        }
     }
-    else if (dragonsKilled > 50) {
+    else if (dragonsKilled >= 50) {
         dragonSpeed = 0.5
         dragonsOnScreen = 700
         bonusScore = 4
-        playerLives = 30
+        
+        if (dragonsKilled === 50) {
+            playerLives = 25
+        }
     }
-    else if (dragonsKilled > 25) {
+    else if (dragonsKilled >= 25) {
         dragonSpeed = 0.5
         dragonsOnScreen = 800
         bonusScore = 3
-        playerLives = 25
+
+        if (dragonsKilled === 25) {
+            playerLives = 25
+        }
     }
-    else if (dragonsKilled > 10) {
+    else if (dragonsKilled >= 10) {
         dragonSpeed = 0.4
         dragonsOnScreen = 900
         bonusScore = 2
-        playerLives = 20
+
+        // check if dragons killed is equal to set amount and then increase lives
+        if (dragonsKilled === 10) {
+            playerLives = 20
+        }   
     }
     
     // check if a key has been pressed and move the player
@@ -338,16 +376,28 @@ function animate() {
         player.velocity.y = 0
     }
 
-    // if code is put in here it calls projectile too many times
-    if(keys.space.pressed) {
+    // check player life count and stop game if they run out of lives
+    // otherwise keep spawning new dragons in to the game
+    if(playerLives <= 0) {
+        playerLives = 0
+        
+        if(!gameOver) {
+            alert("Game Over!")
+            gameOver = true
+            dragonSpeed = 500
+        }
         
     }
+    else {
+        if (frames % dragonsOnScreen === 0) {
+            grids.push(new Grid)
+        }
 
-    if (frames % dragonsOnScreen === 0) {
-        grids.push(new Grid)
+        frames++
     }
+    
 
-    frames++
+    
 }
 
 // start the game animation

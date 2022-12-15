@@ -10,6 +10,7 @@
     margin-left: 100px;
 }
 
-#playerScore {
+#playerScore, #lifeCount {
     margin-right: 50px;
 }
+
