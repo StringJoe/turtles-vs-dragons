@@ -17,3 +17,6 @@ code for dropdown menu that changes backgrounds belongs to Paolo Bergantino
 and Mateen Ulhaq from stackoverflow
 https://stackoverflow.com/questions/1085801/get-selected-value-in-dropdown-list-using-javascript
 
+# Modal Box Credit
+All credit for the code that creates the instructions for the user goes to w3schools.
+Their code can be found here: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
