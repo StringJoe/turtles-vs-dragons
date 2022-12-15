@@ -27,8 +27,8 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 // define the width and height to be the same as the monitors width and height
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = innerWidth - 15
+canvas.height = innerHeight / 1.2
 
 // define a class for the player's character
 class Player {
@@ -132,8 +132,8 @@ class Grid {
         this.dragons = []
 
         // create multiple dragon objects
-        for (let i = 0; i < 10; i++) {
-            this.dragons.push(new Dragon({position: {x:i*100, y: 0}}))
+        for (let i = 0; i < 12; i++) {
+            this.dragons.push(new Dragon({position: {x:i*150, y: 0}}))
         }
     }
 
@@ -192,10 +192,22 @@ const keys = {
     s: {
         pressed: false
     },
-    space: {
+    m: {
         pressed: false
     }
 }
+
+// frames for dragon and player info
+let frames = 0
+var dragonsKilled = 0
+var dragonSpeed = 0.1
+var dragonsOnScreen = 1000
+var playerScore = 0
+var playerLives = 20
+var bonusScore = 1
+
+var score = document.getElementById("playerScore")
+var lifeCount = document.getElementById("lifeCount")
 
 // create the animation loop
 function animate() {
@@ -225,7 +237,7 @@ function animate() {
     grids.forEach(grid => {
         //grid.update()
         grid.dragons.forEach((dragon, i) => {
-            dragon.update({velocity: {x: 0, y: 0.1}})
+            dragon.update({velocity: {x: 0, y: dragonSpeed}})
 
             projectiles.forEach((projectile, j) => {
                 if (projectile.position.y - projectile.radius <= dragon.position.y + dragon.height && 
@@ -234,12 +246,72 @@ function animate() {
                     setTimeout(() => {
                         grid.dragons.splice(i, 1)
                         projectiles.splice(j, 1)
+                        dragonsKilled++
+                        playerScore += 100*bonusScore
+                        score.innerHTML = playerScore
                     }, 0)
                 }
             })
         })
     })
 
+    lifeCount.innerHTML = playerLives
+    // change the amount of dragons based on how many killed
+    // and also change the players score and life count
+    if(dragonsKilled > 500) {
+        dragonSpeed = 0.5
+        dragonsOnScreen = 50
+        bonusScore = 50
+    }
+    else if(dragonsKilled > 250) {
+        dragonSpeed = 2.5
+        dragonsOnScreen = 1000
+        bonusScore = 25
+        playerLives = 100
+    }
+    else if(dragonsKilled > 150) {
+        dragonSpeed = 1.0
+        dragonsOnScreen = 300
+        bonusScore = 10
+        playerLives = 50
+    }
+    else if (dragonsKilled > 125) {
+        dragonSpeed = 0.75
+        dragonsOnScreen = 400
+        bonusScore = 8
+        playerLives = 35
+    }
+    else if (dragonsKilled > 100) {
+        dragonSpeed = 0.6
+        dragonsOnScreen = 500
+        bonusScore = 6
+        playerLives = 30
+    }
+    else if (dragonsKilled > 75) {
+        dragonSpeed = 0.5
+        dragonsOnScreen = 600
+        bonusScore = 5
+        playerLives = 30
+    }
+    else if (dragonsKilled > 50) {
+        dragonSpeed = 0.4
+        dragonsOnScreen = 700
+        bonusScore = 4
+        playerLives = 30
+    }
+    else if (dragonsKilled > 25) {
+        dragonSpeed = 0.3
+        dragonsOnScreen = 800
+        bonusScore = 3
+        playerLives = 25
+    }
+    else if (dragonsKilled > 10) {
+        dragonSpeed = 0.2
+        dragonsOnScreen = 900
+        bonusScore = 2
+        playerLives = 20
+    }
+    
     // check if a key has been pressed and move the player
     if(keys.a.pressed && player.position.x > 0) {
         player.velocity.x = -5
@@ -259,9 +331,15 @@ function animate() {
     }
 
     // if code is put in here it calls projectile too many times
-    if(keys.space.pressed) {
+    if(keys.m.pressed) {
         
     }
+
+    if (frames % dragonsOnScreen === 0) {
+        grids.push(new Grid)
+    }
+
+    frames++
 }
 
 // start the game animation
@@ -290,9 +368,9 @@ addEventListener('keydown', ({key}) => {
             //player.velocity.y = +5
             keys.s.pressed = true;
             break
-        case ' ':
+        case 'm':
             //console.log("shoot")
-            keys.space.pressed = true;
+            keys.m.pressed = true;
 
             // add a projectile to the array
             projectiles.push(
@@ -335,9 +413,9 @@ addEventListener('keyup', ({key}) => {
             //player.velocity.y = 0
             keys.s.pressed = false;
             break
-        case ' ':
+        case 'm':
             console.log("shoot")
-            keys.space.pressed = false;
+            keys.m.pressed = false;
             break
 
     }
