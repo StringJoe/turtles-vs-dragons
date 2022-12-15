@@ -1,9 +1,3 @@
-// create a canvas for the background of the game
-const backgroundCanvas = document.getElementById("backgroundCanvas");
-const backgroundContext = spriteCanvas.getContext("2d");
-const BACKGROUND_CANVAS_WIDTH = backgroundCanvas.width = innerWidth;
-const BACKGROUND_CANVAS_HEIGHT = backgroundCanvas.height = innerHeight;
-
 // create array of background images
 const BACKGROUND_IMAGES = ["swamp/boardwalk1.png", "swamp/Boat 1.png", "swamp/Cabin 2.png", 
                             "swamp/Castle.png", "swamp/Caves 1.png"];
@@ -29,7 +23,7 @@ e.onchange = onChange;
 // end background changing code
 
 // get the canvas element from the web page and the context of the canvas
-const canvas = document.getElementById('spriteCanvas')
+const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 // define the width and height to be the same as the monitors width and height
@@ -79,8 +73,110 @@ class Player {
     }
 }
 
+// define a class for the dragons character
+class Dragon {
+    constructor({position}) {
+        // define the starting position for the player
+        this.position = {
+            x: position.x,
+            y: position.y
+        }
+
+        // define an initial velocity for player movement
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        // create the image object for the turtle
+        const image = new Image()
+        image.src = './dragon-images/blue-dragons.png'
+        
+        // must make constructor variable equal to the const variable other wise it will be null
+        this.image = image
+        this.width = 100
+        this.height = 100
+    }
+
+    // create a method to draw the character to the screen
+    draw() {
+        c.fillStyle = 'red'
+        //c.fillRect(this.position.x, this.position.y, this.width,
+        //    this.height)
+
+        //console.log(this.image)
+        c.drawImage(this.image, 0, 0, 150, 150, this.position.x, this.position.y, 150, 150)  
+    }
+
+    // create a method that when drawn updates the player's position
+    update({velocity}) {
+        this.draw()
+        //this.position.x += this.velocity.x
+        this.position.y += velocity.y
+    }
+}
+
+// create a grid class to create multiple dragons
+class Grid {
+    constructor() {
+        this.position = {
+            x: 0,
+            y: 0
+        }
+
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        this.dragons = []
+
+        // create multiple dragon objects
+        for (let i = 0; i < 10; i++) {
+            this.dragons.push(new Dragon({position: {x:i*100, y: 0}}))
+        }
+    }
+
+    update() {
+        this.position.y += this.velocity.y
+    }
+}
+
+// create a projectile for the player to fight with
+class Projectile {
+    constructor({position, velocity}) {
+        this.position = position
+        this.velocity = velocity
+
+        this.radius = 3
+    }
+
+    // draw the projectile as a circle
+    draw() {
+        c.beginPath()
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+        c.fillStyle = 'red'
+        c.fill()
+        c.closePath()
+    }
+
+    // update the projectile path
+    update() {
+        this.draw()
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+    }
+    
+}
+
 // create the player object
 const player = new Player()
+
+// create the projectile object
+const projectiles = []
+
+// create an array to hold grid objects
+const grids = [new Grid()]
 
 // create dictionary to determine if key has been pressed
 const keys = {
@@ -110,10 +206,39 @@ function animate() {
     requestAnimationFrame(animate)
 
     // create the background image
-    backgroundContext.drawImage(backgroundImage, 0, 0, BACKGROUND_CANVAS_WIDTH, BACKGROUND_CANVAS_HEIGHT);
+    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
     // call the update function for the player
     player.update()
+
+    // create the projectiles
+    projectiles.forEach((projectile, index) => {
+
+        if (projectile.position.y + projectile.radius <= 0) {
+            projectiles.splice(index, 1)
+        }
+        else {
+            projectile.update()
+        }
+    })
+
+    grids.forEach(grid => {
+        //grid.update()
+        grid.dragons.forEach((dragon, i) => {
+            dragon.update({velocity: {x: 0, y: 0.1}})
+
+            projectiles.forEach((projectile, j) => {
+                if (projectile.position.y - projectile.radius <= dragon.position.y + dragon.height && 
+                    projectile.position.x + projectile.radius  >= dragon.position.x &&
+                    projectile.position.x - projectile.radius - 100 <= dragon.position.x) {
+                    setTimeout(() => {
+                        grid.dragons.splice(i, 1)
+                        projectiles.splice(j, 1)
+                    }, 0)
+                }
+            })
+        })
+    })
 
     // check if a key has been pressed and move the player
     if(keys.a.pressed && player.position.x > 0) {
@@ -132,6 +257,11 @@ function animate() {
         player.velocity.x = 0
         player.velocity.y = 0
     }
+
+    // if code is put in here it calls projectile too many times
+    if(keys.space.pressed) {
+        
+    }
 }
 
 // start the game animation
@@ -141,28 +271,42 @@ animate()
 addEventListener('keydown', ({key}) => {
     switch (key) {
         case 'a':
-            console.log("left")
+            //console.log("left")
             //player.velocity.x = -5
             keys.a.pressed = true;
             break
         case 'd':
-            console.log("right")
+            //console.log("right")
             //player.velocity.x = +5
             keys.d.pressed = true;
             break
         case 'w':
-            console.log("up")
+            //console.log("up")
             //player.velocity.y = -5
             keys.w.pressed = true;
             break
         case 's':
-            console.log("down")
+            //console.log("down")
             //player.velocity.y = +5
             keys.s.pressed = true;
             break
         case ' ':
-            console.log("shoot")
+            //console.log("shoot")
             keys.space.pressed = true;
+
+            // add a projectile to the array
+            projectiles.push(
+                new Projectile({
+                    position: {
+                        x: player.position.x + player.width / 2,
+                        y: player.position.y
+                    },
+                    velocity: {
+                        x: 0,
+                        y: -10
+                    }
+                })
+            )
             break
 
     }
