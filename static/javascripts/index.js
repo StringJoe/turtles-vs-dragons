@@ -133,7 +133,10 @@ class Grid {
 
         // create multiple dragon objects
         for (let i = 0; i < 6; i++) {
-            this.dragons.push(new Dragon({position: {x:0, y: i*100}}))
+            for(let j = 0; j < dragonsPerWave; j++) {
+                this.dragons.push(new Dragon({position: {x:j*100, y: i*100}}))
+            }
+            
         }
     }
 
@@ -200,11 +203,12 @@ const keys = {
 // frames for dragon and player info
 let frames = 0
 var dragonsKilled = 0
-var dragonSpeed = 0.2
+var dragonSpeed = 0.8
 var dragonsOnScreen = 1000
 var playerScore = 0
 var playerLives = 20
 var bonusScore = 1
+var dragonsPerWave = 1
 
 // create boolean value to check if game is over
 gameOver = false
@@ -277,52 +281,57 @@ function animate() {
     // change the amount of dragons based on how many killed
     // and also change the players score and life count
     if(dragonsKilled >= 500) {
-        dragonSpeed = 0.5
-        dragonsOnScreen = 50
+        dragonSpeed = 1.0
+        dragonsOnScreen = 800
+        dragonsPerWave = 7
         
         if (dragonsKilled === 500) {
             playerLives = 100
         }
     }
     else if(dragonsKilled >= 250) {
-        dragonSpeed = 2.5
-        dragonsOnScreen = 1000
+        dragonSpeed = 1.2
+        dragonsOnScreen = 800
         bonusScore = 25
+        dragonsPerWave = 6
         
         if (dragonsKilled === 250) {
             playerLives = 80
         }
     }
     else if(dragonsKilled >= 150) {
-        dragonSpeed = 1.0
-        dragonsOnScreen = 300
+        dragonSpeed = 1.75
+        dragonsOnScreen = 700
         bonusScore = 10
+        dragonsPerWave = 5
         
         if (dragonsKilled === 150) {
             playerLives = 40
         }
     }
     else if (dragonsKilled >= 125) {
-        dragonSpeed = 0.75
-        dragonsOnScreen = 400
+        dragonSpeed = 1.5
+        dragonsOnScreen = 700
         bonusScore = 8
+        dragonsPerWave = 4
         
         if (dragonsKilled === 125) {
             playerLives = 35
         }
     }
     else if (dragonsKilled >= 100) {
-        dragonSpeed = 0.5
-        dragonsOnScreen = 500
+        dragonSpeed = 1.4
+        dragonsOnScreen = 700
         bonusScore = 6
+        dragonsPerWave = 3
         
         if (dragonsKilled === 100) {
             playerLives = 30
         }
     }
     else if (dragonsKilled >= 75) {
-        dragonSpeed = 0.5
-        dragonsOnScreen = 600
+        dragonSpeed = 1.3
+        dragonsOnScreen = 700
         bonusScore = 5
         
         if (dragonsKilled === 75) {
@@ -330,17 +339,18 @@ function animate() {
         }
     }
     else if (dragonsKilled >= 50) {
-        dragonSpeed = 0.5
-        dragonsOnScreen = 700
+        dragonSpeed = 1.5
+        dragonsOnScreen = 500
         bonusScore = 4
+        dragonsPerWave = 2
         
         if (dragonsKilled === 50) {
             playerLives = 25
         }
     }
     else if (dragonsKilled >= 25) {
-        dragonSpeed = 0.5
-        dragonsOnScreen = 800
+        dragonSpeed = 1.75
+        dragonsOnScreen = 400
         bonusScore = 3
 
         if (dragonsKilled === 25) {
@@ -348,8 +358,8 @@ function animate() {
         }
     }
     else if (dragonsKilled >= 10) {
-        dragonSpeed = 0.4
-        dragonsOnScreen = 900
+        dragonSpeed = 1.5
+        dragonsOnScreen = 500
         bonusScore = 2
 
         // check if dragons killed is equal to set amount and then increase lives
