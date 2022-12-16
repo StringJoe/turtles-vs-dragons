@@ -8,6 +8,11 @@ josephasantay@lewisu.edu
 # project proposal link
 https://turtles-vs-dragons-js.azurewebsites.net/
 
+# Credit for Project
+Credit to Chris Courses and his Youtube tutorial showing how to make a Space Invaders game using
+JavaScript and HTML Canvas. While most of the code written is based off this tutorial, it has
+been slightly modified for the purposes of this project. The tutorial can be found here: https://www.youtube.com/watch?v=MCVU0w73uKI
+
 # Background Credit
 Credit for all the backgrounds used in this game go to Lornn from lornn.itch.io. The files for these sprites can be
 found at https://lornn.itch.io/fantasy-swamp-backgrounds
